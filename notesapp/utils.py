@@ -1,14 +1,10 @@
 import imp
 from django.shortcuts import render
-from requests import request
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Note
 from .serializers import NoteSerializer
 from django.views.decorators.csrf import csrf_exempt
-from .utils import getNotes,createNote,getNote,updateNote,deleteNote
-
-# Create your views here.
 
 @api_view(['GET'])
 def getRoute(request):
@@ -33,7 +29,7 @@ def getRoute(request):
             'description': 'Creates new note with data sent in post request'
         },
         {
-            'Endpoint': '/notes/id/',
+            'Endpoint': '/notes/id/`',
             'method': 'PUT',
             'body': {'body': ""},
             'description': 'Creates an existing note with data sent in post request'
@@ -47,21 +43,43 @@ def getRoute(request):
     ]
    return Response(routes)
 
-@api_view(['GET','POST'])
-def notes(request):
-    if(request.method=='GET'):
-        return getNotes(request)
-    
-    elif(request.method=='POST'):
-        return createNote(request)
 
-@api_view(['GET','PUT','DELETE'])
-def note(request,pk):
-    if(request.method=='GET'):
-        return getNote(request,pk)
-    
-    elif(request.method=='PUT'):
-        return updateNote(request,pk)
+def getNotes(request):
+    notes = Note.objects.all().order_by('-updated')
+    serializer = NoteSerializer(notes,many=True)
+    return Response(serializer.data)
 
-    elif(request.method=='DELETE'):
-        return deleteNote(request,pk)
+
+def createNote(request):
+    data = request.data
+
+    note = Note.objects.create(
+        body=data
+    )
+    serializer = NoteSerializer(instance=note,data=data)
+    if(serializer).is_valid():
+        serializer.save()
+    return Response()
+
+
+def getNote(request,pk):
+    notes = Note.objects.get(id=pk)
+    serializer = NoteSerializer(notes)
+    return Response(serializer.data)
+
+@csrf_exempt
+def updateNote(request,pk):
+    data = request.data
+    note = Note.objects.get(id=pk)
+    serializer = NoteSerializer(instance=note,data=data)
+
+    if(serializer).is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+@csrf_exempt
+def deleteNote(request,pk):
+    note = Note.objects.get(id=pk)
+    note.delete()
+    return Response()
