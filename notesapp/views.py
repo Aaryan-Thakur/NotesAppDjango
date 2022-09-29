@@ -9,7 +9,6 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 @api_view(['GET'])
-@csrf_exempt
 def getRoute(request):
 
    routes = [
@@ -47,14 +46,12 @@ def getRoute(request):
    return Response(routes)
 
 @api_view(['GET'])
-@csrf_exempt
 def getNotes(request):
     notes = Note.objects.all().order_by('-updated')
     serializer = NoteSerializer(notes,many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-@csrf_exempt
 def getNote(request,pk):
     notes = Note.objects.get(id=pk)
     serializer = NoteSerializer(notes)
