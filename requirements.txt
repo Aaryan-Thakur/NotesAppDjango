@@ -1,4 +1,6 @@
 Django==4.1.1
 djangorestframework==3.14.0
 django-cors-headers==3.13.0
-tkinter==8.6.12
+tk==0.1.0
+requests==2.23.0
+Pillow >= 7
