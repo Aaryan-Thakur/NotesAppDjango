@@ -14,6 +14,7 @@ from .utils import getNotes,createNote,getNote,updateNote,deleteNote
 def getRoute(request):
 
    routes = [
+
         {
             'Endpoint': '/notes/',
             'method': 'GET',
@@ -27,7 +28,7 @@ def getRoute(request):
             'description': 'Returns a single note object'
         },
         {
-            'Endpoint': '/notes/create/',
+            'Endpoint': '/notes/',
             'method': 'POST',
             'body': {'body': ""},
             'description': 'Creates new note with data sent in post request'
@@ -39,7 +40,7 @@ def getRoute(request):
             'description': 'Creates an existing note with data sent in post request'
         },
         {
-            'Endpoint': '/notes/id/delete/',
+            'Endpoint': '/notes/id/',
             'method': 'DELETE',
             'body': None,
             'description': 'Deletes and exiting note'
